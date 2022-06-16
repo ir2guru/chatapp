@@ -1,22 +1,15 @@
 turnConfig = {
-  iceServers: [
-    {
-      urls: "stun:openrelay.metered.ca:80",
-    },
-    {
-      urls: "turn:openrelay.metered.ca:80",
-      username: "openrelayproject",
-      credential: "openrelayproject",
-    },
-    {
-      urls: "turn:openrelay.metered.ca:443",
-      username: "openrelayproject",
-      credential: "openrelayproject",
-    },
-    {
-      urls: "turn:openrelay.metered.ca:443?transport=tcp",
-      username: "openrelayproject",
-      credential: "openrelayproject",
-    },
-  ]
+    iceServers: [
+    {   
+      urls: [ "stun:stun.netsend.pw" ]
+    }, 
+    {   
+      username: "ejikerichard",   
+      credential: "Ejikerichard234@",   
+      urls: [       
+        "turn:stun.netsend.pw:3478?transport=udp",       
+        "turn:stun.netsend.pw:3478?transport=tcp",       
+       ]
+     }
+   ]
 }

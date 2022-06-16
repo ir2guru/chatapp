@@ -7,7 +7,6 @@ var isStarted = false;
 var localStream;
 var pc;
 var remoteStream;
-var remoteShare;
 var turnReady;
 
 //Initialize turn/stun server here
@@ -17,8 +16,7 @@ var pcConfig = turnConfig;
 //Set local stream constraints
 var localStreamConstraints = {
     audio: true,
-    video: true,
-    text : true
+    video: true
   };
 
 
@@ -104,19 +102,12 @@ function sendMessage(message, room) {
 //Displaying Local Stream and Remote Stream on webpage
 var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
-
 console.log("Going to find Local media");
 navigator.mediaDevices.getUserMedia(localStreamConstraints)
 .then(gotStream)
 .catch(function(e) {
   alert('getUserMedia() error: ' + e.name);
 });
-
-const screenShareButton = document.getElementById('screenShareButton');
-screenShareButton.disabled = false;
-
-//screenShareButton.disabled = true;
-
 
 //If found local stream
 function gotStream(stream) {
@@ -202,10 +193,6 @@ function doAnswer() {
   );
 }
 
-function ShareScreen(){
-  navigator.canShare
-}
-
 //Function to set description of local media
 function setLocalAndSendMessage(sessionDescription) {
   pc.setLocalDescription(sessionDescription);
@@ -219,12 +206,6 @@ function onCreateSessionDescriptionError(error) {
 
 //Function to play remote stream as soon as this client receives it
 function handleRemoteStreamAdded(event) {
-  console.log('Remote stream added.');
-  remoteStream = event.stream;
-  remoteVideo.srcObject = remoteStream;
-}
-
-function handleRemoteScreenAdded(event) {
   console.log('Remote stream added.');
   remoteStream = event.stream;
   remoteVideo.srcObject = remoteStream;
@@ -250,43 +231,4 @@ function stop() {
   isStarted = false;
   pc.close();
   pc = null;
-}
-
-const shareScreen = async () => {
-  const mediaStream = await getLocalScreenCaptureStream();
-
-  const screenTrack = mediaStream.getVideoTracks()[0];
-  // sharedScreen.srcObject = screenTrack;
-
-  if (screenTrack) {
-    console.log('replace camera track with screen track');
-    replaceTrack(screenTrack)
-    //replaceTrack(screenTrack);
-  }
-};
-
-const getLocalScreenCaptureStream = async () => {
-  try {
-    const constraints = { video: { cursor: 'always' }, audio: false };
-    const screenCaptureStream = await navigator.mediaDevices.getDisplayMedia(constraints);
-
-    
-    return screenCaptureStream;
-  } catch (error) {
-    console.error('failed to get local screen', error);
-  }
-};
-
-const replaceTrack = (newTrack) => {
-  const sender = pc.getSenders().find(sender =>
-    sender.track.kind === newTrack.kind 
-  );
-
-  if (!sender) {
-    console.warn('failed to find sender');
-
-    return;
-  }
-
-  //sender.replaceTrack(newTrack);
 }
